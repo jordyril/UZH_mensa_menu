@@ -1,11 +1,8 @@
-import os
 from bs4 import BeautifulSoup
-
 import requests
+import numpy as np
 
-DIRECTORY = f"D:/OneDrive - bf.uzh.ch/Code/Python/UZH_mensa"
-os.chdir(DIRECTORY)
-from menu_classes import Menu, Dish
+from menu import Menu
 
 
 class Mensa(object):
@@ -45,17 +42,28 @@ class Mensa(object):
         if self.__open:
             soup = self._webpage
             body = soup.find("div", class_="newslist-description")
+            self.menu.add_meals(body)
 
-            self.menu.add_dishes(body)
-
+    @property
     def summary(self):
         if self.__open:
             summary = ""
 
-            for dish in self.menu.dishes:
-                summary += dish.summary
+            for meal in self.menu.meals:
+                summary += meal.summary
                 summary += "\n \n"
 
         else:
             summary = f"{self.mensa} is {self.status.lower()}"
+        summary += "\n \n"
         return summary
+
+    def max(self, value):
+        values = [x.values[value] for x in self.menu.meals]
+        idx = np.argmax(values)
+        return self.menu.meals[idx]
+
+    def min(self, value):
+        values = [x.values[value] for x in self.menu.meals]
+        idx = np.argmin(values)
+        return self.menu.meals[idx]
