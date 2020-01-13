@@ -9,12 +9,17 @@ class Meal(object):
 
     def __set_values(self):
         cells = self.table.find_all("td")
-        self.values["energy"] = int(
-            cells[1].text.split("(")[1].split("kcal")[0].replace("'", "").strip()
-        )
-        self.values["protein"] = float(cells[3].text.split("g")[0].strip())
-        self.values["fat"] = float(cells[5].text.split("g")[0].strip())
-        self.values["carbs"] = float(cells[7].text.split("g")[0].strip())
+        try:
+            self.values["energy"] = int(
+                cells[1].text.split("(")[1].split(
+                    "kcal")[0].replace("'", "").strip()
+            )
+            self.values["protein"] = float(cells[3].text.split("g")[0].strip())
+            self.values["fat"] = float(cells[5].text.split("g")[0].strip())
+            self.values["carbs"] = float(cells[7].text.split("g")[0].strip())
+        except IndexError:
+            for i in ['energy', 'protein', 'fat', 'carbs']:
+                self.values[i] = '/'
 
     def __str__(self):
         return self.kitchen

@@ -27,7 +27,7 @@ if today in WORKDAYS:
     subject = f"Mensa plan for {today} {my_date}"
     body = mensas_day.summary
 
-    ### set up message with EmailMessage
+    # set up message with EmailMessage
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = EMAIL_ADDRESS
