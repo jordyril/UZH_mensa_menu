@@ -13,11 +13,12 @@ class Menu(object):
         tables = pagecontent.find_all("table")
         foods = pagecontent.find_all("p")
 
-        nbr_meals = len(tables)
+        nbr_meals = len(options)
 
         for i in range(nbr_meals):
             meal_descr = foods[i * 2].text.replace("  ", " ").strip()
             kitchen = options[i].text.split("|")[0].strip()
-            table = tables[i]
+            if kitchen == "News":
+                continue
+            table = tables[i * 2]
             self.meals.append(Meal(kitchen, meal_descr, table))
-
