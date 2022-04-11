@@ -6,22 +6,17 @@ from email.message import EmailMessage
 from general import DAYS, URLS, WORKDAYS
 from day import Day
 
-
-EMAIL_ADDRESS = os.environ.get("HOTMAIL_USER")
-EMAIL_PASSWORD = os.environ.get("HOTMAIL_PASS")
-
-# EMAIL_ADDRESS = os.environ.get("GMAIL_USER")
-# EMAIL_PASSWORD = os.environ.get("GMAIL_PASS")
+EMAIL_ADDRESS = os.environ.get("GMAIL_USER")
+EMAIL_PASSWORD = os.environ.get("GMAIL_PASS")
 
 RECEIVER = "jordy.rillaerts@bf.uzh.ch"
-
 
 # look up todays menu
 my_date = date.today()
 today = DAYS[my_date.weekday()]
 
 if today in WORKDAYS:
-    mensas_day = Day(today, URLS)
+    mensas_day = Day(today, URLS[:6])
 
     # basic email parameters
     subject = f"Mensa plan for {today} {my_date}"
@@ -33,6 +28,7 @@ if today in WORKDAYS:
     msg["From"] = EMAIL_ADDRESS
     msg["To"] = RECEIVER
     msg.set_content(body)
+
     # msg.add_alternative(
     #     """
     # <!DOCTYPE html>
@@ -45,12 +41,6 @@ if today in WORKDAYS:
     #     subtype="html",
     # )
 
-    with smtplib.SMTP("smtp.live.com", 587) as smtp:
-        smtp.starttls()
-
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
         smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
         smtp.send_message(msg)
-
-    # with smtplib.SMTP("smtp.gmail.com", 465) as smtp:
-    #     smtp.login(EMAIL_ADRESS, EMAIL_PASSWORD)
-    #     smtp.send_message(msg)
