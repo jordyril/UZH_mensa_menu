@@ -15,7 +15,7 @@ RECEIVER = "jordy.rillaerts@bf.uzh.ch"
 body = ""
 for d in WORKDAYS:
     body += box(d.upper())
-    body += Day(d, URLS[:6]).summary
+    body += Day(d, URLS[:]).summary
     body += "\n \n \n"
 
 # basic email parameters
