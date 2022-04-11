@@ -23,14 +23,17 @@ class Mensa(object):
     def __retrieve_status(self):
         soup = self._webpage
 
-        table = soup.find("table")
+        table = soup.find(
+            "table"
+        )  # if closed, first table is not food, but Umweltbelastung
+        if not table:
+            self._close_mensa()
+            return None
 
-        if table is not None:
-            self.status, self.__open = "OPEN", True
-            self.menu = Menu()
+        if "Ausgewogenheit" not in table.text:
+            self._open_mensa()
         else:
-            self.status, self.__open = "CLOSED", False
-            self.menu = None
+            self._close_mensa()
 
     def __retrieve_mensa(self):
         soup = self._webpage
@@ -43,6 +46,14 @@ class Mensa(object):
             soup = self._webpage
             body = soup.find("div", class_="newslist-description")
             self.menu.add_meals(body)
+
+    def _close_mensa(self):
+        self.status, self.__open = "CLOSED", False
+        self.menu = None
+
+    def _open_mensa(self):
+        self.status, self.__open = "OPEN", True
+        self.menu = Menu()
 
     @property
     def summary(self):
